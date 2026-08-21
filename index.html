@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>最外層ラミナ 幅面の材縁部の節径比 判定ツール</title>
+    <style>
+        body { font-family: "Helvetica Neue", Arial, sans-serif; line-height: 1.6; max-width: 700px; margin: 5px auto; padding: 20px; background: #f4f4f9; overflow: scroll; }
+        .container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .tabs { display: flex; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 10px; cursor: pointer; background: #ddd; border: none; font-weight: bold; }
+        .tab-btn.active { background: #007bff; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        h1 { font-size: 1.4em; color: #333; margin: 0 0 20px 0; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        h2 { font-size: 1.2em; color: #333; margin: 0 0 20px 0; border-bottom: 1px solid #666; padding-bottom: 10px; }
+        h5 { color: #555; margin: 0; padding: 10px 0 10px 0; }
+        h6 { margin: 0; padding: 5px 0 5px 0; }
+        .input-row { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; padding: 10px; width: 100%; font-size: 16px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        button:hover { background: #0056b3; }
+        #result { margin-top: 15px; padding: 20px; border-radius: 5px; display: none; }
+        .pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .footer { font-size: 0.85em; color: #555; margin: 0; padding: 10px 0 10px 0;  text-align: center; border-top: 1px solid #ccc; }
+        .footer p { margin: 5px 0; }
+    </style>
+</head>
+
+<body>
+<h5><div style="text-align: right;">※26/07/23時点　同一等級構成集成材については、ラミナの積層数が、4層以上についてのみ対応</div></h5>
+
+<div class="container">
+    <h1>最外層ラミナ 幅面の材縁部の節径比 判定ツール</h1>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'combined')">対称異等級</button>
+        <button class="tab-btn" onclick="switchTab(event, 'homogeneous')">同一等級</button>
+    </div>
+
+    <!-- 対称異等級 Combined Glulam -->
+    <div id="combined" class="tab-content active">
+        <h2>対称異等級構成集成材 の場合</h2>
+        <div class="input-row">
+<label>強度等級（ 等級区分機による等級 ）</label>
+<select id="combined_strength">
+    <option value="L200">E170-F495（ L200 ）</option>
+    <option value="L180">E150-F435（ L180 ）</option>
+    <option value="L160">E135-F375（ L160 ）</option>
+    <option value="L140">E120-F330（ L140 ）</option>
+    <option value="L125">E105-F300（ L125 ）</option>
+    <option value="L110">E95-F270（ L110 ）</option>
+    <option value="L100">E85-F255（ L100 ）</option>
+    <option value="L90">E75-F240（ L90 ）</option>
+    <option value="L80">E65-F225、E65-F220（ L80 ）</option>
+    <option value="L70">E55-F200（ L70 ）</option>
+</select>
+        </div>
+        <div class="input-row">
+            <label>樹種群</label>
+            <h6>* サザンパインは，ショートリーフパイン，スラッシュパイン，ロブロリーパイン及びロングリーフパインに限る。</h6>
+            <select id="combined_species">
+            <option value="A">A（ アピトン ）</option>
+            <option value="B">B（ イタヤカエデ，カバ，ブナ，ミズナラ，ケヤキ，ダフリカカラマツ，サザンパイン *，ベイマツ及びウエスタンラーチ ）</option>
+            <option value="C">C（ ヒノキ，ヒバ，カラマツ，アカマツ，クロマツ及びベイヒ ）</option>
+            <option value="D">D（ ツガ，タモ，シオジ，ニレ，アラスカイエローシダー，ラジアタパイン及びベイツガ ）</option>
+            <option value="E">E（ モミ，トドマツ，エゾマツ，ベイモミ，スプルース，ロッジポールパイン，ベニマツ，ポンデローサパイン，オウシュウアカマツ，ジャックパイン及びラワン ）</option>
+            <option value="F">F（ スギ，ベイスギ及びホワイトサイプレスパイン ）</option>
+            </select>
+        </div>
+        <div class="input-row">
+            <label>節の幅 (a) [mm]</label>
+            <input type="number" id="combined_a" placeholder="例: 50">
+        </div>
+        <div class="input-row">
+            <label>ラミナの幅 (W) [mm]</label>
+            <input type="number" id="combined_w" placeholder="例: 150">
+        </div>
+        <button onclick="executeJudgment('combined')">判定する</button>
+    </div>
+
+    <!-- 同一等級 Homogeneous Glulam -->
+    <div id="homogeneous" class="tab-content">
+        <h2>同一等級構成集成材 の場合（ 積層数4層以上 ）</h2>
+        <div class="input-row">
+<label>強度等級（ 等級区分機による等級 ）</label>
+<select id="homogeneous_strength">
+    <option value="L200">E190-F615（ L200 ）</option>
+    <option value="L180">E170-F540（ L180 ）</option>
+    <option value="L160">E150-F465（ L160 ）</option>
+    <option value="L140">E135-F405（ L140 ）</option>
+    <option value="L125">E120-F375（ L125 ）</option>
+    <option value="L110">E105-F345（ L110 ）</option>
+    <option value="L100">E95-F315（ L100 ）</option>
+    <option value="L90">E85-F300（ L90 ）</option>
+    <option value="L80">E75-F270（ L80 ）</option>
+    <option value="L70">E65-F255（ L70 ）</option>
+    <option value="L60">E55-F225（ L60 ）</option>
+</select>
+        </div>
+        <div class="input-row">
+            <label>樹種群</label>
+            <h6>* サザンパインは，ショートリーフパイン，スラッシュパイン，ロブロリーパイン及びロングリーフパインに限る。</h6>
+            <select id="homogeneous_species">
+            <option value="A">A（ アピトン ）</option>
+            <option value="B">B（ イタヤカエデ，カバ，ブナ，ミズナラ，ケヤキ，ダフリカカラマツ，サザンパイン *，ベイマツ及びウエスタンラーチ ）</option>
+            <option value="C">C（ ヒノキ，ヒバ，カラマツ，アカマツ，クロマツ及びベイヒ ）</option>
+            <option value="D">D（ ツガ，タモ，シオジ，ニレ，アラスカイエローシダー，ラジアタパイン及びベイツガ ）</option>
+            <option value="E">E（ モミ，トドマツ，エゾマツ，ベイモミ，スプルース，ロッジポールパイン，ベニマツ，ポンデローサパイン，オウシュウアカマツ，ジャックパイン及びラワン ）</option>
+            <option value="F">F（ スギ，ベイスギ及びホワイトサイプレスパイン ）</option>
+            </select>
+        </div>
+        <div class="input-row">
+            <label>節の幅 (a) [mm]</label>
+            <input type="number" id="homogeneous_a" placeholder="例: 50">
+        </div>
+        <div class="input-row">
+            <label>ラミナの幅 (W) [mm]</label>
+            <input type="number" id="homogeneous_w" placeholder="例: 150">
+        </div>
+        <button onclick="executeJudgment('homogeneous')">判定する</button>
+    </div>
+
+    <div id="result"></div>
+
+</div>
+
+<h5>
+<p>幅面の材縁部の節径比 とは？</p>
+<p>　材縁部とはりょう線から 10 mm（幅方向に調整された乾燥済みラミナの場合は 5 mm）の距離までの範囲をいい，節径比とは節及び穴の径のその存する材面の幅に対する百分率をいい，図4 *により測定する。</br>
+　材の強度を低減させる節，穴等の欠点については，その径と位置が重要となる。</br>
+・節の径は，節の存する材面の材長方向のりょう線に平行なその節の 2 接線間の距離を測定する。</br>
+・節がりょう線によって切られている場合には，そのりょう線と接線との距離を節の径とする。</br>
+・材縁部に節の一部でもかかれば材縁部の節となる。最大のものを材縁部の節に決定する。</p>
+出典：日本農林規格　集成材（JAS 1152）　4.1.3 幅面の材縁部の節径比　<a href="https://www.maff.go.jp/j/jas/jas_standard/attach/pdf/index-484.pdf" target="_blank" rel="noopener noreferrer">🔗</a>
+</h5>
+
+<footer class="footer">
+<p><strong>最外層ラミナ 幅面の材縁部の節径比 判定ツール v2.0</strong> (Internal Preview)</br>
+更新：2026/07/23</br>
+お問合せ：関西 生産技術部 松井</p>
+<p style="color: #d9534f; font-weight: bold;">※本ツールは部内限定の試行版です。外部への共有は厳禁とします。</p>
+</footer>
+
+<script>
+    // 1. データ定義
+const matrixCombined = {
+    'L200': {'A':1}, 'L180':{'A':2,'B':1}, 'L160':{'A':3,'B':2,'C':1}, 'L140':{'A':4,'B':3,'C':2,'D':1},
+    'L125':{'B':4,'C':3,'D':2,'E':1}, 'L110':{'C':4,'D':3,'E':2,'F':1}, 'L100':{'D':4,'E':3,'F':2},
+    'L90':{'E':4,'F':3}, 'L80':{'F':4}, 'L70':{'F':5}
+};
+
+const matrixHomogeneous = {
+    'L200':{'A':1}, 'L180':{'A':1,'B':1}, 'L160':{'A':1,'B':1,'C':1}, 'L140':{'A':2,'B':1,'C':1,'D':1},
+    'L125':{'A':3,'B':2,'C':1,'D':1,'E':1}, 'L110':{'B':3,'C':2,'D':1,'E':1,'F':1},
+    'L100':{'C':3,'D':2,'E':1,'F':1}, 'L90':{'D':3,'E':2,'F':1}, 'L80':{'E':3,'F':2}, 'L70':{'F':3}, 'L60':{'F':4}
+};
+
+    // 2. タブ切り替え
+    function switchTab(event, tabName) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+        document.getElementById('result').style.display = "none";
+    }
+
+    // 3. ロジック関数
+    function getGrade(type, s, g) {
+        const matrix = (type === 'combined') ? matrixCombined : matrixHomogeneous;
+        return (matrix[s] && matrix[s][g]) ? matrix[s][g] : null;
+    }
+
+    function getAllowedRatio(type, grade) {
+        if (type === 'combined') {
+            return (grade <= 3) ? 17 : 25;
+        } else {
+            // Homogeneous: 1級=17%, 2級=25%, 3級・4級=33%
+            if (grade === 1) return 17;
+            if (grade === 2) return 25;
+            if (grade >= 3) return 33;
+        }
+        return 0;
+    }
+
+    // 4. 判定処理
+    function executeJudgment(type) {
+        const prefix = type + '_';
+        const s = document.getElementById(prefix + 'strength').value;
+        const g = document.getElementById(prefix + 'species').value;
+        const a = parseFloat(document.getElementById(prefix + 'a').value);
+        const w = parseFloat(document.getElementById(prefix + 'w').value);
+        
+        if (!a || !w || w <= 0) { alert("正しい数値を入力してください"); return; }
+
+        const grade = getGrade(type, s, g);
+        if (!grade) {
+            alert("選択された組み合わせに該当する等級がありません。");
+            return;
+        }
+
+        const allowedRatio = getAllowedRatio(type, grade);
+        const actualRatio = (a / w) * 100;
+        const isPass = actualRatio <= allowedRatio;
+
+        const resDiv = document.getElementById('result');
+        resDiv.style.display = "block";
+        resDiv.className = isPass ? "pass" : "fail";
+        resDiv.innerHTML = `<strong>判定結果: ${isPass ? "合格" : "不合格"}</strong><br>
+            最外層ラミナの等級区分: ${grade}級<br>許容節径比: ${allowedRatio}% 以下<br>
+            実測節径比: ${actualRatio.toFixed(1)}%<br>
+            <small>判定基準: 幅 ${w}mm に対し、${allowedRatio}% = ${(w * allowedRatio / 100).toFixed(1)}mm まで許容</small>`;
+    }
+</script>
+</body>
+</html>

@@ -15,9 +15,8 @@
         .tab-btn.active { background: #B2C6D3; color: white; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        h1 {font-size: 0.85em color: #333; font-size: medium; margin: 0 0 20px 0; border-bottom: 2px solid #A1B3C4; padding-bottom: 10px; }
-        h2 {font-size: 0.85em color: #333; font-size: medium; margin: 0 0 20px 0; border-bottom: 1px solid #A1B3C4; padding-bottom: 5px; }
-        h6 { margin: 0; padding: 5px 0 5px 0; }
+        h1 { color: #333; font-size: medium; margin: 0 0 20px 0; border-bottom: 2px solid #A1B3C4; padding-bottom: 10px; }
+        h2 { color: #333; font-size: medium; margin: 0 0 20px 0; border-bottom: 1px solid #A1B3C4; padding-bottom: 5px; }
         .input-row { margin-bottom: 15px; font-size: 16px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
         input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
@@ -105,7 +104,8 @@
         </div>
         <div class="input-row">
             <label>樹種群</label>
-            <h6>* サザンパインは，ショートリーフパイン，スラッシュパイン，ロブロリーパイン及びロングリーフパインに限る。</h6>
+                    h6 { margin: 0; padding: 5px 0 5px 0; }
+            <p>* サザンパインは，ショートリーフパイン，スラッシュパイン，ロブロリーパイン及びロングリーフパインに限る。</p>
             <select id="homogeneous_species">
             <option value="A">A（ アピトン ）</option>
             <option value="B">B（ イタヤカエデ，カバ，ブナ，ミズナラ，ケヤキ，ダフリカカラマツ，サザンパイン *，ベイマツ及びウエスタンラーチ ）</option>
@@ -130,14 +130,14 @@
 
 </div>
 
-<p>幅面の材縁部の節径比 とは？</p>
+<p style="color: #d9534f;">幅面の材縁部の節径比 とは？</br>
 <p>　材縁部とはりょう線から 10 mm（幅方向に調整された乾燥済みラミナの場合は 5 mm）の距離までの範囲をいい，節径比とは節及び穴の径のその存する材面の幅に対する百分率をいい，図4 *により測定する。</br>
 　材の強度を低減させる節，穴等の欠点については，その径と位置が重要となる。</br>
 ・節の径は，節の存する材面の材長方向のりょう線に平行なその節の 2 接線間の距離を測定する。</br>
 ・節がりょう線によって切られている場合には，そのりょう線と接線との距離を節の径とする。</br>
-・材縁部に節の一部でもかかれば材縁部の節となる。最大のものを材縁部の節に決定する。</p>
+・材縁部に節の一部でもかかれば材縁部の節となる。最大のものを材縁部の節に決定する。</br>
 出典：日本農林規格　集成材（JAS 1152）　4.1.3 幅面の材縁部の節径比　<a href="https://www.maff.go.jp/j/jas/jas_standard/attach/pdf/index-484.pdf" 
-                                             target="_blank" rel="noopener noreferrer">🔗</a>
+                                             target="_blank" rel="noopener noreferrer">🔗</a></p>
 
 
 <footer class="footer">
